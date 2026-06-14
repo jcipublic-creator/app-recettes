@@ -1,0 +1,27 @@
+{
+  "titre": "Tarte aux pommes",
+  "categorie": "Dessert",
+  "sousCategorie": "Tarte",
+  "difficulte": 1,
+  "dureePreparation": 25,
+  "dureeCuisson": 35,
+  "medias": [
+    { "type": "image", "url": "https://res.cloudinary.com/demo/image/upload/sample.jpg" }
+  ],
+  "ingredients": [
+    { "quantite": "1", "unite": "pâte", "nom": "pâte brisée" },
+    { "quantite": "4", "unite": "", "nom": "pommes" },
+    { "quantite": "50", "unite": "g", "nom": "sucre" },
+    { "quantite": "20", "unite": "g", "nom": "beurre" }
+  ],
+  "etapesPreparation": [
+    "Étaler la pâte dans un moule.",
+    "Éplucher et couper les pommes en fines lamelles.",
+    "Disposer les pommes en rosace sur la pâte.",
+    "Saupoudrer de sucre et parsemer de noisettes de beurre."
+  ],
+  "etapesCuisson": [
+    { "description": "Cuire au four jusqu'à ce que les pommes soient dorées.", "temperature": "180°C", "mode": "Four chaleur tournante", "duree": "35 min" }
+  ],
+  "commentaires": "Délicieuse tiède avec une boule de glace vanille."
+}

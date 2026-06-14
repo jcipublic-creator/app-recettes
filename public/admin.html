@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin — Mes Recettes</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a href="/" class="brand"><span class="emoji">🍲</span>Mes Recettes</a>
+      <div class="nav-actions">
+        <a class="btn" href="/">← Retour au site</a>
+        <button class="btn" id="logoutBtn" style="display:none">Déconnexion</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Écran de connexion -->
+    <div id="loginView" class="login-box" style="display:none">
+      <h2>Espace administration</h2>
+      <p class="hint">Saisissez le mot de passe pour ajouter ou modifier des recettes.</p>
+      <div class="field"><input type="password" id="pwd" placeholder="Mot de passe" /></div>
+      <button class="btn primary" id="loginBtn" style="width:100%">Se connecter</button>
+      <p id="loginError" style="color:#b32020;margin-top:10px"></p>
+    </div>
+
+    <!-- Formulaire -->
+    <div id="formView" class="form-wrap" style="display:none">
+      <h2 id="formTitle">Nouvelle recette</h2>
+
+      <div class="field">
+        <label>Titre *</label>
+        <input id="titre" placeholder="Ex : Tarte aux pommes" />
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Catégorie</label>
+          <input id="categorie" list="catList" placeholder="Entrée, Plat, Dessert…" />
+          <datalist id="catList"></datalist>
+        </div>
+        <div class="field">
+          <label>Sous-catégorie</label>
+          <input id="sousCategorie" placeholder="Poisson, Volaille…" />
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Difficulté (1 à 3)</label>
+          <select id="difficulte">
+            <option value="1">1 — Facile</option>
+            <option value="2">2 — Moyen</option>
+            <option value="3">3 — Difficile</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <div class="row2">
+            <input id="dureePreparation" type="number" min="0" placeholder="Prépa (min)" />
+            <input id="dureeCuisson" type="number" min="0" placeholder="Cuisson (min)" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Médias (photos / vidéos)</label>
+        <div id="medias"></div>
+        <button class="btn small" type="button" data-add="media">+ Ajouter un média (URL)</button>
+        <button class="btn small" type="button" id="uploadBtn" style="display:none">⬆ Uploader un fichier</button>
+        <input type="file" id="fileInput" accept="image/*,video/*" style="display:none" />
+        <p class="hint">Collez une URL Cloudinary, ou uploadez directement un fichier.</p>
+      </div>
+
+      <div class="field">
+        <label>Ingrédients</label>
+        <div id="ingredients"></div>
+        <button class="btn small" type="button" data-add="ingredient">+ Ajouter un ingrédient</button>
+      </div>
+
+      <div class="field">
+        <label>Étapes de préparation</label>
+        <div id="etapesPreparation"></div>
+        <button class="btn small" type="button" data-add="prep">+ Ajouter une étape</button>
+      </div>
+
+      <div class="field">
+        <label>Étapes de cuisson (avec paramètres)</label>
+        <div id="etapesCuisson"></div>
+        <button class="btn small" type="button" data-add="cuisson">+ Ajouter une étape de cuisson</button>
+      </div>
+
+      <div class="field">
+        <label>Commentaires libres</label>
+        <textarea id="commentaires" placeholder="Astuces, variantes, accord met/vin…"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn primary" id="saveBtn">Enregistrer</button>
+        <a class="btn" href="/">Annuler</a>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

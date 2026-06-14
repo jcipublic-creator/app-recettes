@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mes Recettes</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a href="/" class="brand"><span class="emoji">🍲</span>Mes Recettes</a>
+      <div class="nav-actions" id="navActions">
+        <a class="btn" href="/admin.html">Admin</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="filters">
+      <input type="search" id="search" placeholder="Rechercher une recette, un ingrédient…" />
+      <select id="filterCat"><option value="">Toutes catégories</option></select>
+      <select id="filterSub"><option value="">Toutes sous-catégories</option></select>
+    </div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" style="display:none">Aucune recette pour le moment.</div>
+  </main>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
