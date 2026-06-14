@@ -22,15 +22,17 @@ function thumb(r) {
 
 function card(r) {
   const sub = r.sousCategorie ? `<span class="tag">${escapeHtml(r.sousCategorie)}</span>` : "";
-  const total = (Number(r.dureePreparation) || 0) + (Number(r.dureeCuisson) || 0);
-  const time = total ? `<span class="tag">⏱ ${total} min</span>` : "";
+  const prep = Number(r.dureePreparation) || 0;
+  const cuisson = Number(r.dureeCuisson) || 0;
+  const prepTag = prep ? `<span class="tag">⏱ Prép. ${prep} min</span>` : "";
+  const cuissonTag = cuisson ? `<span class="tag">🔥 Cuisson ${cuisson} min</span>` : "";
   return `<a class="card" href="/recette.html?id=${encodeURIComponent(r.id)}">
     ${thumb(r)}
     <div class="body">
       <div class="title">${escapeHtml(r.titre)}</div>
       <div class="meta">
         ${r.categorie ? `<span class="tag cat">${escapeHtml(r.categorie)}</span>` : ""}
-        ${sub}${time}
+        ${sub}${prepTag}${cuissonTag}
         ${diffStars(r.difficulte)}
       </div>
     </div>
