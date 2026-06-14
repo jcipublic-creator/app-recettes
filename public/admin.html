@@ -22,7 +22,11 @@
     <div id="loginView" class="login-box" style="display:none">
       <h2>Espace administration</h2>
       <p class="hint">Saisissez le mot de passe pour ajouter ou modifier des recettes.</p>
-      <div class="field"><input type="password" id="pwd" placeholder="Mot de passe" /></div>
+      <div class="field" style="position:relative">
+        <input type="password" id="pwd" placeholder="Mot de passe" style="padding-right:44px" />
+        <button type="button" id="togglePwd" title="Afficher / masquer"
+          style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;line-height:1;padding:4px">👁</button>
+      </div>
       <button class="btn primary" id="loginBtn" style="width:100%">Se connecter</button>
       <p id="loginError" style="color:#b32020;margin-top:10px"></p>
     </div>

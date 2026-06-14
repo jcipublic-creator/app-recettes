@@ -199,6 +199,16 @@ function showLogin() {
     else { $("#loginError").textContent = "Mot de passe incorrect."; }
   };
   $("#pwd").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#loginBtn").click(); });
+  const toggle = $("#togglePwd");
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const f = $("#pwd");
+      const show = f.type === "password";
+      f.type = show ? "text" : "password";
+      toggle.textContent = show ? "🙈" : "👁";
+      f.focus();
+    });
+  }
 }
 
 async function showForm() {
