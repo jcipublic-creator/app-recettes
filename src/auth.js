@@ -51,11 +51,12 @@ export function requireAuth(req, res, next) {
   return res.status(401).json({ error: "Authentification requise" });
 }
 
-// Verifie le mot de passe a temps constant
+// Verifie le mot de passe a temps constant.
+// On retire les espaces/retours a la ligne accidentels autour (copier-coller).
 export function checkPassword(input) {
-  const expected = process.env.ADMIN_PASSWORD || "";
+  const expected = (process.env.ADMIN_PASSWORD || "").trim();
   if (!expected) return false;
-  const a = Buffer.from(String(input));
+  const a = Buffer.from(String(input ?? "").trim());
   const b = Buffer.from(expected);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
