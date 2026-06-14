@@ -26,13 +26,14 @@ function card(r) {
   const cuisson = Number(r.dureeCuisson) || 0;
   const prepTag = prep ? `<span class="tag">⏱ Prép. ${prep} min</span>` : "";
   const cuissonTag = cuisson ? `<span class="tag">🔥 Cuisson ${cuisson} min</span>` : "";
+  const reposTag = r.repos ? `<span class="tag">🕒 Repos ${escapeHtml(r.repos)}</span>` : "";
   return `<a class="card" href="/recette.html?id=${encodeURIComponent(r.id)}">
     ${thumb(r)}
     <div class="body">
       <div class="title">${escapeHtml(r.titre)}</div>
       <div class="meta">
         ${r.categorie ? `<span class="tag cat">${escapeHtml(r.categorie)}</span>` : ""}
-        ${sub}${prepTag}${cuissonTag}
+        ${sub}${prepTag}${cuissonTag}${reposTag}
         ${diffStars(r.difficulte)}
       </div>
     </div>

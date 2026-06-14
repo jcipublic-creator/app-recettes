@@ -1,6 +1,6 @@
 // Source unique du numero de version de l'app.
 // Incrementer la sous-version (1.x) a chaque evolution.
-const APP_VERSION = "1.1";
+const APP_VERSION = "1.2";
 
 document.addEventListener("DOMContentLoaded", () => {
   const brand = document.querySelector("header.site .brand");

@@ -138,7 +138,8 @@ function render(r) {
       <div><b>Difficulté :</b> ${diffStars(r.difficulte)}</div>
       ${r.dureePreparation ? `<div><b>Préparation :</b> ${r.dureePreparation} min</div>` : ""}
       ${r.dureeCuisson ? `<div><b>Cuisson :</b> ${r.dureeCuisson} min</div>` : ""}
-      ${total ? `<div><b>Total :</b> ${total} min</div>` : ""}
+      ${r.repos ? `<div><b>Repos / marinade :</b> ${escapeHtml(r.repos)}</div>` : ""}
+      ${total ? `<div><b>Total (hors repos) :</b> ${total} min</div>` : ""}
     </div>
 
     ${(r.ingredients || []).length ? `<div class="section">
