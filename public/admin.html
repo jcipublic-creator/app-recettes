@@ -73,10 +73,13 @@
       <div class="field">
         <label>Médias (photos / vidéos)</label>
         <div id="medias"></div>
+        <div id="pasteZone" tabindex="0" style="display:none;margin:8px 0;padding:18px;border:2px dashed var(--border);border-radius:12px;text-align:center;color:var(--muted);cursor:pointer;outline:none;transition:border-color .15s,background .15s">
+          📋 Clique ici puis <b>Cmd&nbsp;+&nbsp;V</b> pour coller une image — ou glisse-dépose un fichier ici
+        </div>
         <button class="btn small" type="button" data-add="media">+ Ajouter un média (URL)</button>
         <button class="btn small" type="button" id="uploadBtn" style="display:none">⬆ Uploader un fichier</button>
         <input type="file" id="fileInput" accept="image/*,video/*" style="display:none" />
-        <p class="hint">Collez une URL Cloudinary, ou uploadez directement un fichier.</p>
+        <p class="hint">Colle une image (Cmd+V) ou glisse un fichier dans la zone, uploade un fichier, ou colle une URL Cloudinary. Pour les vidéos : upload de fichier ou URL.</p>
       </div>
 
       <div class="field">

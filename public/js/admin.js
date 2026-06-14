@@ -130,35 +130,88 @@ async function save() {
 }
 
 /* ---------- Upload Cloudinary direct ---------- */
+// Envoie un fichier (File/Blob) vers Cloudinary avec une signature fraiche.
+async function uploadFile(file) {
+  if (!file) return;
+  try {
+    showToast("Upload en cours…");
+    const sig = await (await fetch("/api/upload/signature")).json();
+    if (!sig.signature) { showToast("Cloudinary non configuré."); return; }
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("api_key", sig.apiKey);
+    fd.append("timestamp", sig.timestamp);
+    fd.append("signature", sig.signature);
+    fd.append("folder", sig.folder);
+    const up = await fetch(
+      `https://api.cloudinary.com/v1_1/${sig.cloudName}/auto/upload`,
+      { method: "POST", body: fd }
+    );
+    const result = await up.json();
+    if (result.secure_url) {
+      const type = result.resource_type === "video" ? "video" : "image";
+      $("#medias").appendChild(mediaRow({ type, url: result.secure_url }));
+      showToast("Média ajouté.");
+    } else {
+      showToast("Upload échoué.");
+    }
+  } catch (e) {
+    showToast("Upload échoué.");
+  }
+}
+
 async function setupUpload() {
   try {
+    // On verifie que Cloudinary est configure avant d'afficher les controles.
     const sig = await (await fetch("/api/upload/signature")).json();
-    if (sig.signature) {
-      $("#uploadBtn").style.display = "inline-flex";
-      $("#uploadBtn").onclick = () => $("#fileInput").click();
-      $("#fileInput").onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        showToast("Upload en cours…");
-        const fd = new FormData();
-        fd.append("file", file);
-        fd.append("api_key", sig.apiKey);
-        fd.append("timestamp", sig.timestamp);
-        fd.append("signature", sig.signature);
-        fd.append("folder", sig.folder);
-        const up = await fetch(
-          `https://api.cloudinary.com/v1_1/${sig.cloudName}/auto/upload`,
-          { method: "POST", body: fd }
-        );
-        const result = await up.json();
-        if (result.secure_url) {
-          const type = result.resource_type === "video" ? "video" : "image";
-          $("#medias").appendChild(mediaRow({ type, url: result.secure_url }));
-          showToast("Média ajouté.");
-        } else {
-          showToast("Upload échoué.");
+    if (!sig.signature) return;
+
+    // Bouton "Uploader un fichier"
+    $("#uploadBtn").style.display = "inline-flex";
+    $("#uploadBtn").onclick = () => $("#fileInput").click();
+    $("#fileInput").onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) uploadFile(file);
+      e.target.value = "";
+    };
+
+    // Zone "Coller / glisser-deposer"
+    const zone = $("#pasteZone");
+    if (zone) {
+      zone.style.display = "block";
+
+      // Collage (Cmd+V) : actif quand la zone a le focus, ou globalement sur la page admin.
+      const handlePaste = (e) => {
+        const items = (e.clipboardData || {}).items || [];
+        for (const it of items) {
+          if (it.type && it.type.startsWith("image/")) {
+            const blob = it.getAsFile();
+            if (blob) { uploadFile(blob); e.preventDefault(); }
+            return;
+          }
         }
       };
+      zone.addEventListener("paste", handlePaste);
+      document.addEventListener("paste", handlePaste);
+      zone.addEventListener("click", () => zone.focus());
+
+      // Glisser-deposer
+      zone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        zone.style.borderColor = "var(--accent)";
+        zone.style.background = "#fbf7f0";
+      });
+      const reset = () => {
+        zone.style.borderColor = "var(--border)";
+        zone.style.background = "transparent";
+      };
+      zone.addEventListener("dragleave", reset);
+      zone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        reset();
+        const file = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) uploadFile(file);
+      });
     }
   } catch (e) { /* Cloudinary non configuré : on garde la saisie d'URL */ }
 }
