@@ -21,8 +21,39 @@ function media(m) {
   return `<img src="${escapeHtml(m.url)}" alt="" loading="lazy" />`;
 }
 
-function ingredient(i) {
-  const q = [i.quantite, i.unite].filter(Boolean).join(" ");
+// Formate un nombre : arrondi a 1 decimale, sans .0 inutile, separateur virgule.
+function formatNum(n) {
+  const r = Math.round(n * 10) / 10;
+  return String(r).replace(".", ",");
+}
+
+// Multiplie une quantite texte par un facteur.
+// Gere : nombre simple ("2.3", "0,8"), fourchette ("1,3-1,5", "12 à 15"),
+// et laisse intact ce qui n'a pas de nombre exploitable.
+function scaleQuantite(str, factor) {
+  if (!str) return str;
+  const s = String(str).trim();
+  const num = "(\\d+(?:[.,]\\d+)?)";
+  const toNum = (x) => parseFloat(x.replace(",", "."));
+
+  // Fourchette : a–b  (séparateurs - – — à)
+  const rangeFull = s.match(new RegExp("^" + num + "\\s*(?:[-–—]|à)\\s*" + num + "(.*)$"));
+  if (rangeFull) {
+    const a = formatNum(toNum(rangeFull[1]) * factor);
+    const b = formatNum(toNum(rangeFull[2]) * factor);
+    return `${a}–${b}${rangeFull[3] || ""}`;
+  }
+  // Nombre simple eventuellement suivi de texte
+  const single = s.match(new RegExp("^" + num + "(.*)$"));
+  if (single) {
+    return formatNum(toNum(single[1]) * factor) + (single[2] || "");
+  }
+  return s; // pas de nombre : on ne touche pas
+}
+
+function ingredient(i, factor) {
+  const scaled = scaleQuantite(i.quantite, factor);
+  const q = [scaled, i.unite].filter(Boolean).join(" ");
   return `<li>${q ? `<span class="q">${escapeHtml(q)}</span> ` : ""}${escapeHtml(i.nom)}</li>`;
 }
 
@@ -51,7 +82,46 @@ async function delRecipe() {
   else { showToast("Suppression impossible (connecté en admin ?)"); }
 }
 
+let currentRecipe = null;
+let basePortions = 4;
+
+// (Re)dessine la liste d'ingrédients selon le nombre de portions choisi.
+function renderIngredients(portions) {
+  const list = document.getElementById("ingredientsList");
+  if (!list || !currentRecipe) return;
+  const factor = basePortions > 0 ? portions / basePortions : 1;
+  list.innerHTML = (currentRecipe.ingredients || [])
+    .map((i) => ingredient(i, factor))
+    .join("");
+}
+
+function setupPortions() {
+  const input = document.getElementById("portInput");
+  if (!input) return;
+  const apply = () => {
+    let v = Math.max(1, Math.round(Number(input.value) || basePortions));
+    input.value = v;
+    renderIngredients(v);
+  };
+  input.addEventListener("input", apply);
+  document.getElementById("portMinus").addEventListener("click", () => {
+    input.value = Math.max(1, (Number(input.value) || basePortions) - 1);
+    apply();
+  });
+  document.getElementById("portPlus").addEventListener("click", () => {
+    input.value = (Number(input.value) || basePortions) + 1;
+    apply();
+  });
+  document.getElementById("portReset").addEventListener("click", () => {
+    input.value = basePortions;
+    apply();
+  });
+  renderIngredients(basePortions);
+}
+
 function render(r) {
+  currentRecipe = r;
+  basePortions = Math.max(1, Math.round(Number(r.portions) || 4));
   const total = (Number(r.dureePreparation) || 0) + (Number(r.dureeCuisson) || 0);
   document.title = r.titre;
 
@@ -73,7 +143,16 @@ function render(r) {
 
     ${(r.ingredients || []).length ? `<div class="section">
       <h2>Ingrédients</h2>
-      <ul class="ingredients">${r.ingredients.map(ingredient).join("")}</ul>
+      <div class="portions" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <span style="color:var(--muted)">Pour</span>
+        <button class="btn small" type="button" id="portMinus" aria-label="moins">−</button>
+        <input id="portInput" type="number" min="1" step="1" value="${basePortions}"
+          style="width:64px;text-align:center;padding:6px;border:1px solid var(--border);border-radius:8px" />
+        <button class="btn small" type="button" id="portPlus" aria-label="plus">+</button>
+        <span style="color:var(--muted)">personne(s)</span>
+        <button class="btn small" type="button" id="portReset" style="margin-left:4px">↺ Référence (${basePortions})</button>
+      </div>
+      <ul class="ingredients" id="ingredientsList"></ul>
     </div>` : ""}
 
     ${(r.etapesPreparation || []).length ? `<div class="section">
@@ -92,6 +171,7 @@ function render(r) {
     </div>` : ""}
   `;
   $("#content").innerHTML = html;
+  setupPortions();
 }
 
 async function init() {

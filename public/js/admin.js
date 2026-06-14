@@ -103,6 +103,7 @@ function collect() {
     categorie: $("#categorie").value.trim(),
     sousCategorie: $("#sousCategorie").value.trim(),
     difficulte: Number($("#difficulte").value),
+    portions: Number($("#portions").value) || 4,
     dureePreparation: Number($("#dureePreparation").value) || 0,
     dureeCuisson: Number($("#dureeCuisson").value) || 0,
     medias, ingredients, etapesPreparation, etapesCuisson,
@@ -223,6 +224,7 @@ function fillForm(r) {
   $("#categorie").value = r.categorie || "";
   $("#sousCategorie").value = r.sousCategorie || "";
   $("#difficulte").value = String(r.difficulte || 1);
+  $("#portions").value = r.portions || 4;
   $("#dureePreparation").value = r.dureePreparation || "";
   $("#dureeCuisson").value = r.dureeCuisson || "";
   (r.medias || []).forEach((m) => $("#medias").appendChild(mediaRow(m)));

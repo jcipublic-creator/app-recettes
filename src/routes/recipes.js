@@ -21,6 +21,7 @@ function sanitizeRecipe(body) {
     categorie: String(body.categorie || "").trim(),
     sousCategorie: String(body.sousCategorie || "").trim(),
     difficulte: Math.min(3, Math.max(1, Number(body.difficulte) || 1)),
+    portions: Math.max(1, Math.round(Number(body.portions) || 4)),
     dureePreparation: Number(body.dureePreparation) || 0,
     dureeCuisson: Number(body.dureeCuisson) || 0,
     medias: toArray(body.medias)
